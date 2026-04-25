@@ -10,21 +10,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   logo: {
-    width: 500,
+    width: 450,
     height: 250,
     
   },
   text: {
-    fontSize: 30,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '',
     color: 'black',
+    fontFamily: 'georgia',
   },
 })  
 const Welcome = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
   navigation.navigate('Login')
-  }, 50000)
+  }, 3000)
   
   return () => clearTimeout(timer)
   }, [navigation])
@@ -32,7 +33,7 @@ const Welcome = ({ navigation }) => {
   <SafeAreaProvider>
     <SafeAreaView style={styles.container}>
       <Image source={require('../assets/Logo.png')} style={styles.logo} />
-      <Text style={styles.text}>HKart your way</Text>
+      <Text style={styles.text}>HKart your cart</Text>
     </SafeAreaView>
  </SafeAreaProvider>
     );
