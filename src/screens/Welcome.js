@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    fontWeight: '',
     color: 'black',
     fontFamily: 'georgia',
   },
