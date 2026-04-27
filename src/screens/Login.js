@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet,Image, TextInput, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet,Image, TextInput, Text, View, TouchableOpacity, Alert } from 'react-native'
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import { AuthContext } from '../context/AuthContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,6 +36,19 @@ const styles = StyleSheet.create({
 const Login = ({navigation}) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const { signIn } = React.useContext(AuthContext);
+
+  const handleLogin = async () => {
+     try {
+      await signIn(email, password);
+        navigation.navigate('Home');
+    } catch (error) {
+    Alert.alert('Error signing in:', error.message);
+    
+    }
+    
+  };
+
   return (
     <SafeAreaProvider style={styles.container} >
       <View>
@@ -67,7 +81,7 @@ const Login = ({navigation}) => {
             alignContent: 'center',
             alignItems: 'center',
           }}
-          onPress={() => navigation.navigate('Home')}
+          onPress={handleLogin}
         >
           <Text style={{color: 'white', fontSize: 16}}>Login</Text>
         </TouchableOpacity>

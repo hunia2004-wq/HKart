@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet,Image, TextInput, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, TextInput, Text, View, TouchableOpacity, Alert } from 'react-native'
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
+import {AuthContext} from '../context/AuthContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,7 +37,20 @@ const Register = ({navigation}) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
-
+  const { signUp } = React.useContext(AuthContext);
+    const handleRegister = async () => {
+      if (password !== confirmPassword) {
+  Alert.alert('Passwords do not match');
+  return;
+}
+         try {
+          await signUp(email, password,);
+            navigation.navigate('Login');
+        } catch (error) {
+        Alert.alert('Error signing up:', error.message);
+        
+        }
+      }
   return (
     <SafeAreaProvider style={styles.container} >
       <View>
@@ -62,7 +76,7 @@ const Register = ({navigation}) => {
         <TextInput
      
           style={styles.input}
-          onChangeText={confirmPassword}
+          onChangeText={setConfirmPassword}
           value={confirmPassword}
           placeholder="Confirm Password"
           secureTextEntry={true}
@@ -77,8 +91,10 @@ const Register = ({navigation}) => {
             alignContent: 'center',
             alignItems: 'center',
           }}
-          onPress={() => navigation.navigate('Login')}
+          onPress={handleRegister}
         >
+          
+        
           <Text style={{color: 'white', fontSize: 16}}>Register</Text>
         </TouchableOpacity>
         
