@@ -77,7 +77,7 @@ export default function AuthProvider({ children }) {
   );
 
   return (
-    <AuthContext.Provider value={authContext}>
+   <AuthContext.Provider value={{ ...authContext, isLoading: state.isLoading, userToken: state.userToken }}>
       {children}
     </AuthContext.Provider>
   );

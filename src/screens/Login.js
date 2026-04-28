@@ -39,9 +39,10 @@ const Login = ({navigation}) => {
   const { signIn } = React.useContext(AuthContext);
 
   const handleLogin = async () => {
+    console.log('attempting login with:', email, password)
      try {
       await signIn(email, password);
-        navigation.navigate('Home');
+      console.log('login successful')
     } catch (error) {
     Alert.alert('Error signing in:', error.message);
     
