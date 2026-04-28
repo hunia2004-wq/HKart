@@ -45,7 +45,7 @@ const Register = ({navigation}) => {
 }
          try {
           await signUp(email, password,);
-            navigation.navigate('Login');
+            Alert.alert('Registration successful! Please check your email to confirm your account.');
         } catch (error) {
         Alert.alert('Error signing up:', error.message);
         
