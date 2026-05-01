@@ -16,20 +16,21 @@ import Welcome from '../screens/Welcome';
 import Wishlist from '../screens/Wishlist';
 
 
+
+
 const Stack = createNativeStackNavigator()
 export default function Navigation() {
-const { isLoading, userToken } = React.useContext(AuthContext)
-if (isLoading) {
-  // We haven't finished checking for the token yet
-  return <Welcome/>;
-}
+const session = React.useContext(AuthContext)
 
-const isSignedIn  = userToken != null;
+
+const isSignedIn = session !== null;
 
 return (
  
   <NavigationContainer>
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='Welcome'>
+      
+     
       {isSignedIn ? (
   <>
     <Stack.Screen name="Home" component={Home} />
@@ -47,9 +48,10 @@ return (
   </>
 ) : (
   <>
-    <Stack.Screen name="Welcome" component={Welcome} />
-    <Stack.Screen name="Login" component={Login} />
-    <Stack.Screen name="Register" component={Register} />
+    
+<Stack.Screen name="Login" component={Login} screenOptions={{ headerShown: false }}/>
+<Stack.Screen name="Welcome" component={Welcome} />
+<Stack.Screen name="Register" component={Register} />
   </>
 )}
     </Stack.Navigator>

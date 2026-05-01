@@ -1,10 +1,9 @@
 import React from 'react';
 import {Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import {AuthContext} from '../context/AuthContext';
-
+import { supabase } from '../lib/supabase';
 
 const Home = ({navigation}) => {
-  const { signOut } = React.useContext(AuthContext);
+  
 
   return (
     <View
@@ -16,7 +15,7 @@ const Home = ({navigation}) => {
       <Text>Welcome to HKart</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={signOut}
+        onPress={() => supabase.auth.signOut()}
       >
         <Text style={styles.buttonText}>Sign Out</Text>
        

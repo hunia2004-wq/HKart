@@ -2,16 +2,20 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { View, Alert, TextInput, Text, TouchableOpacity } from 'react-native'
 import Avatar from '../components/Avatar'
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
-export default function Account({ userId, email }) {
+export default function Account() {
   const [loading, setLoading] = useState(true)
+  const session = useContext(AuthContext)
   const [username, setUsername] = useState('')
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+ 
 
   useEffect(() => {
-    if (userId) getProfile()
-  }, [userId])
+    if (session.user.id) getProfile()
+  }, [session.user.id])
 
   async function getProfile() {
     try {
@@ -20,7 +24,7 @@ export default function Account({ userId, email }) {
       let { data, error, status } = await supabase
         .from('profiles')
         .select(`username, website, avatar_url`)
-        .eq('id', userId)
+        .eq('id', session.user.id)
         .single()
       if (error && status !== 406) {
         throw error
@@ -46,7 +50,7 @@ export default function Account({ userId, email }) {
       setLoading(true)
 
       const updates = {
-        id: userId,
+        id: session.user.id,
         username,
         website,
         avatar_url,
@@ -64,7 +68,9 @@ export default function Account({ userId, email }) {
       setLoading(false)
     }
   }
-
+ if (session === null) {
+    return <Text>Loading...</Text>
+  }
   return (
     <View >
       <View>
@@ -80,7 +86,7 @@ export default function Account({ userId, email }) {
       <View >
         <Text >Email</Text>
         <TextInput
-          value={email ?? ''}
+          value={session.user.email ?? ''}
           editable={false}
           selectTextOnFocus={false}
           
@@ -119,4 +125,5 @@ export default function Account({ userId, email }) {
       </View>
     </View>
   )
+  
 }

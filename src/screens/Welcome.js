@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
 import { Text, View, Image, StyleSheet } from 'react-native'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { AuthContext } from '../context/AuthContext'
+import { useContext } from 'react'
+
 
 const styles = StyleSheet.create({
   container: {
@@ -21,20 +24,26 @@ const styles = StyleSheet.create({
   },
 })  
 const Welcome = ({ navigation }) => {
+  const session = useContext(AuthContext)
   useEffect(() => {
     const timer = setTimeout(() => {
-  navigation.navigate('Login')
-  }, 3000)
-  
+      if (session) {
+    navigation.replace('Home')
+  } 
+  else {
+    navigation.replace('Login')  
+  }
+}, 3000)
   return () => clearTimeout(timer)
-  }, [navigation])
+  }, [navigation, session])
+  
   return (
-  <SafeAreaProvider>
+ 
     <SafeAreaView style={styles.container}>
       <Image source={require('../assets/Logo.png')} style={styles.logo} />
       <Text style={styles.text}>HKart your cart</Text>
     </SafeAreaView>
- </SafeAreaProvider>
+
     );
  
   };

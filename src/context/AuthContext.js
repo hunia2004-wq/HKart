@@ -1,84 +1,30 @@
-import * as React from 'react';
-import * as SecureStore from 'expo-secure-store';
+import React from 'react'
 import { supabase } from '../lib/supabase'
 
-const AuthContext = React.createContext();
+const AuthContext = React.createContext(null)
 
-export { AuthContext };
-export default function AuthProvider({ children }) {
-  const [state, dispatch] = React.useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    }
-  );
+function AuthProvider({ children }) {
+  const [session, setSession] = React.useState(null)
 
   React.useEffect(() => {
-    const bootstrapAsync = async () => {
-      let userToken;
-      try {
-        userToken = await SecureStore.getItemAsync('userToken');
-      } catch (e) {
-        // Restoring token failed
-      }
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
-    };
-    bootstrapAsync();
-  }, []);
-
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async (email, password) => {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
-        if (error) throw error;
-        dispatch({ type: 'SIGN_IN', token: data.session.access_token });
-      },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
-      signUp: async (email, password) => {
-        const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password,
-        });
-        if (error) throw error;
-        if (data.session) {
-          dispatch({ type: 'SIGN_IN', token: data.session.access_token });
-        } else {
-          throw new Error('Please check your email to confirm your account before signing in.');
+    const {data: { subscription }} = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_OUT') {
+          setSession(null)
+        } else if (session) {
+          setSession(session)
         }
-      },
-    }),
-    []
-  );
+      })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
 
   return (
-   <AuthContext.Provider value={{ ...authContext, isLoading: state.isLoading, userToken: state.userToken }}>
-      {children}
+    <AuthContext.Provider value={session}>
+     {children}
     </AuthContext.Provider>
-  );
+  )
 }
+export { AuthContext, AuthProvider }

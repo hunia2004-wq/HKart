@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert,StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 
 
@@ -33,7 +33,7 @@ export default function Auth() {
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
-      <View >
+      <View style={styles.container}>
         <Text >Email</Text>
         <TextInput
           onChangeText={(text) => setEmail(text)}
@@ -43,7 +43,7 @@ export default function Auth() {
           
         />
       </View>
-      <View >
+      <View style={styles.container}>
         <Text >Password</Text>
         <TextInput
           onChangeText={(text) => setPassword(text)}
@@ -54,7 +54,7 @@ export default function Auth() {
           
         />
       </View>
-      <View >
+      <View style={styles.container}>
         <TouchableOpacity
          
           onPress={() => signInWithEmail()}
@@ -63,7 +63,7 @@ export default function Auth() {
           <Text >Sign in</Text>
         </TouchableOpacity>
       </View>
-      <View >
+      <View style={styles.container}>
         <TouchableOpacity
         
           onPress={() => signUpWithEmail()}
@@ -74,4 +74,46 @@ export default function Auth() {
       </View>
     </View>
   )
+  
 }
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: 'stretch',
+  },
+  mt20: {
+    marginTop: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#86939e',
+    marginBottom: 6,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#86939e',
+    borderRadius: 4,
+    padding: 12,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#2089dc',
+    borderRadius: 4,
+    padding: 12,
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+})

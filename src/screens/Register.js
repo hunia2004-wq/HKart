@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, TextInput, Text, View, TouchableOpacity, Alert } from 'react-native'
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import {AuthContext} from '../context/AuthContext';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import { supabase } from '../lib/supabase';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 300,
-    height: 200, 
+    width: 250,
+    height: 150, 
+    marginBottom: 10,
     
   },
   text: {
@@ -33,18 +34,23 @@ const styles = StyleSheet.create({
   
 
 })
+  
+
+
 const Register = ({navigation}) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
-  const { signUp } = React.useContext(AuthContext);
     const handleRegister = async () => {
       if (password !== confirmPassword) {
   Alert.alert('Passwords do not match');
   return;
 }
          try {
-          await signUp(email, password,);
+          await supabase.auth.signUp({
+            email: email,
+            password: password
+          });
             Alert.alert('Registration successful! Please check your email to confirm your account.');
         } catch (error) {
         Alert.alert('Error signing up:', error.message);
@@ -52,9 +58,10 @@ const Register = ({navigation}) => {
         }
       }
   return (
-    <SafeAreaProvider style={styles.container} >
-      <View>
-        <SafeAreaView >
+  
+     
+        <SafeAreaView style={{ flex:1}} edges={['bottom']} >
+           <View style={styles.container}>
               <Image source={require('../assets/Logo.png')} style={styles.logo} />
               <Text style={styles.text}>HKart your cart</Text>
         
@@ -97,10 +104,10 @@ const Register = ({navigation}) => {
         
           <Text style={{color: 'white', fontSize: 16}}>Register</Text>
         </TouchableOpacity>
-        
+         </View>
+  
       </SafeAreaView>
-      </View>
-    </SafeAreaProvider>
+     
   );
 
 

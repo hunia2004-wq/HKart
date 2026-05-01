@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet,Image, TextInput, Text, View, TouchableOpacity, Alert } from 'react-native'
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { AuthContext } from '../context/AuthContext';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import { supabase } from '../lib/supabase';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 300,
-    height: 200, 
+    width: 250,
+    height: 150, 
+    marginBottom: 10,
     
   },
   text: {
@@ -36,12 +37,15 @@ const styles = StyleSheet.create({
 const Login = ({navigation}) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const { signIn } = React.useContext(AuthContext);
+  
 
   const handleLogin = async () => {
     console.log('attempting login with:', email, password)
      try {
-      await signIn(email, password);
+      await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
       console.log('login successful')
     } catch (error) {
     Alert.alert('Error signing in:', error.message);
@@ -51,9 +55,10 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <SafeAreaProvider style={styles.container} >
-      <View>
-        <SafeAreaView >
+   
+     
+        <SafeAreaView style={{ flex:1}} edges={['bottom']} >
+           <View style={styles.container}>
               <Image source={require('../assets/Logo.png')} style={styles.logo} />
               <Text style={styles.text}>HKart your cart</Text>
         
@@ -65,18 +70,17 @@ const Login = ({navigation}) => {
           placeholder="Email"
         />
         <TextInput
-     
           style={styles.input}
           onChangeText={setPassword}
           value={password}
           placeholder="Password"
           secureTextEntry={true}
         />
+         
         <TouchableOpacity
           style={{
             backgroundColor: 'black',
             padding: 10,
-
             marginTop: 10,
             width: 100,
             alignContent: 'center',
@@ -100,9 +104,10 @@ const Login = ({navigation}) => {
         >
           <Text style={{color: 'white', fontSize: 16}}>Don't have an account? Register</Text>
         </TouchableOpacity>
+              </View>
       </SafeAreaView>
-      </View>
-    </SafeAreaProvider>
+
+    
   );
 
 
