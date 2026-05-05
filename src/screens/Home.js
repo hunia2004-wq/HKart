@@ -69,6 +69,13 @@ const Home = ({navigation}) => {
         <Text style={styles.buttonText}>Account</Text>
        
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('ProductImageUpload')}
+      >
+        <Text style={styles.buttonText}>Product Image Upload  </Text>
+       
+      </TouchableOpacity>
     </View>
   );
 };

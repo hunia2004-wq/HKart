@@ -15,6 +15,7 @@ import Storelocator from '../screens/StoreLocator';
 import Welcome from '../screens/Welcome';
 import Wishlist from '../screens/Wishlist';
 import Account from '../screens/Account';
+import ProductImageUpload from '../screens/ProductImageUpload';
 
 
 
@@ -44,6 +45,7 @@ return (
     <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
     <Stack.Screen name="Wishlist" component={Wishlist} />
     <Stack.Screen name="Account" component={Account} />
+    <Stack.Screen name="ProductImageUpload" component={ProductImageUpload} />
     
 
 

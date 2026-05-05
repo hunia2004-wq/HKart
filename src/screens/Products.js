@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase'
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import { View, Image, Alert, FlatList, StyleSheet, Text,} from 'react-native'
+import { View, Image, Alert, FlatList, StyleSheet, Text,ScrollView, TouchableOpacity} from 'react-native'
 
 
 
@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5F5F5',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#C7CED6'
+        backgroundColor: '#C7CED6',
+        width: '100%',
       },
       
       productContainer: {
@@ -19,6 +20,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 10,
         marginTop: 20,
+        padding: 10,
+        backgroundColor: '#E3E6E8',
+        borderRadius: 10,
+        width: '100%',
         
       },
       productImage: {
@@ -37,20 +42,48 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         fontWeight: 'bold',
       },
+      button: {
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        backgroundColor: '#6F7F8F',
+        marginRight: 10,
+      },
+      activeButton: {
+        backgroundColor: '#A7B3BF',
+      },
+      text: {
+        color: '#2E2E2E',
+        fontWeight: 'bold',
+      },
+     
     }); 
 
 const Products = ({navigation}) => {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [category, setCategory] = React.useState('all');
+  const [categories, setCategories] = React.useState([]);
+   
+  
 
+
+
+  
 
 const fetchProducts = async () => {
   try {
     setLoading(true)
-    let { data, error } = await supabase
-      .from('products')
-      .select('*')
-        
+
+    let query = supabase.from('products').select('*')
+    if (category !== 'all') {
+      query = query.eq('category', category)
+    }
+
+    
+
+    let { data, error } = await query
+
       if (error) {
         
         throw error
@@ -68,10 +101,21 @@ const fetchProducts = async () => {
     }
 
   }
+ const fetchCategories = async () => {
+      let { data, error } = await supabase.from('products')
+      .select('category');
+
+      if (data) {
+        const uniqueCategories = [...new Set(data.map(item => item.category))]
+        setCategories(uniqueCategories)
+      }
+    }
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+    fetchCategories();
+  }, [category]);
+
 
   return (
     
@@ -80,6 +124,45 @@ const fetchProducts = async () => {
         {loading ? (
           <Text>Loading....</Text>
         ) : (
+          <View style={{ width: '100%' }}>
+            <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={{flexDirection: 'row'}}
+      contentContainerStyle={{alignItems: 'center'}}
+
+      
+    >
+      <TouchableOpacity
+               style={[styles.button, category === 'all' && styles.activeButton]}
+                onPress={()=>setCategory('all')}
+              >
+                <Text style={[styles.text, category === 'all' && styles.activeText]}>All</Text>
+              </TouchableOpacity>
+      {categories.map((cat) => (
+        <TouchableOpacity
+          key={cat}
+          style={[
+            styles.button,
+            category === cat && styles.activeButton,
+        ]}
+          onPress={() => {
+            setCategory(cat);
+           
+          }}
+        >
+          <Text style={[
+            styles.text,
+            category === cat && styles.activeText
+          ]}>
+            {cat}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
+  
+       
+
           <FlatList
             data={products}
             keyExtractor={(item) => item.id.toString()}
@@ -87,11 +170,13 @@ const fetchProducts = async () => {
               <View style={styles.productContainer}>
                 <Image source={{ uri: item.image_url }} style={styles.productImage} />
                 <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>${item.price}</Text>
+                <Text style={styles.productPrice}>{item.price} EGP</Text>
               </View>
             )}
           />
-        )}
+       
+        </View>
+         )}
       </SafeAreaView>
     </SafeAreaProvider>
   );
