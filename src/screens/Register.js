@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#C7CED6',
     
   },
   logo: {
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     width: 300,
     margin: 12,
     borderWidth: 3,
-    borderColor: 'black',
+    borderColor: '#6F7F8F',
     padding: 10,
   },
   
@@ -90,7 +90,7 @@ const Register = ({navigation}) => {
         />
         <TouchableOpacity
           style={{
-            backgroundColor: 'black',
+            backgroundColor: '#6F7F8F',
             padding: 10,
 
             marginTop: 10,

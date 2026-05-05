@@ -4,6 +4,9 @@ import { View, Alert, TextInput, Text, TouchableOpacity } from 'react-native'
 import Avatar from '../components/Avatar'
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
+import { StyleSheet } from 'react-native';
+
+
 
 export default function Account() {
   const [loading, setLoading] = useState(true)
@@ -35,6 +38,7 @@ export default function Account() {
         setWebsite(data.website)
         setAvatarUrl(data.avatar_url)
       }
+      
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
@@ -80,15 +84,23 @@ export default function Account() {
           onUpload={(url) => {
             setAvatarUrl(url)
             updateProfile({ username, website, avatar_url: url })
+            styles.avatar = {
+              width: 200,
+              height: 200,
+              borderRadius: 100,
+              marginBottom: 20,
+            }
           }}
         />
       </View>
+      
       <View >
         <Text >Email</Text>
         <TextInput
           value={session.user.email ?? ''}
           editable={false}
           selectTextOnFocus={false}
+          
           
         />
       </View>
@@ -98,6 +110,7 @@ export default function Account() {
           value={username || ''}
           onChangeText={(text) => setUsername(text)}
           
+          
         />
       </View>
       <View >
@@ -105,6 +118,7 @@ export default function Account() {
         <TextInput
           value={website || ''}
           onChangeText={(text) => setWebsite(text)}
+          
         />
       </View>
 
@@ -121,6 +135,7 @@ export default function Account() {
       <View >
         <TouchableOpacity  onPress={() => supabase.auth.signOut()}>
           <Text >Sign Out</Text>
+          
         </TouchableOpacity>
       </View>
     </View>

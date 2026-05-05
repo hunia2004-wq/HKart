@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#C7CED6',
   },
   logo: {
     width: 450,
@@ -41,7 +41,7 @@ const Welcome = ({ navigation }) => {
  
     <SafeAreaView style={styles.container}>
       <Image source={require('../assets/Logo.png')} style={styles.logo} />
-      <Text style={styles.text}>HKart your cart</Text>
+      <Text style={ {color: 'black', fontSize: 23} }>HKart your cart</Text>
     </SafeAreaView>
 
     );

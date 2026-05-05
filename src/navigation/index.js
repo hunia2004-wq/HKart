@@ -14,6 +14,7 @@ import ShoppingCart from '../screens/ShoppingCart';
 import Storelocator from '../screens/StoreLocator';
 import Welcome from '../screens/Welcome';
 import Wishlist from '../screens/Wishlist';
+import Account from '../screens/Account';
 
 
 
@@ -42,6 +43,7 @@ return (
     <Stack.Screen name="StoreLocator" component={Storelocator} />
     <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} />
     <Stack.Screen name="Wishlist" component={Wishlist} />
+    <Stack.Screen name="Account" component={Account} />
     
 
 

@@ -8,9 +8,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#C7CED6',
     
   },
+ 
   logo: {
     width: 250,
     height: 150, 
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     width: 300,
     margin: 12,
     borderWidth: 3,
-    borderColor: 'black',
+    borderColor: '#6F7F8F',
     padding: 10,
   },
   
@@ -79,7 +80,7 @@ const Login = ({navigation}) => {
          
         <TouchableOpacity
           style={{
-            backgroundColor: 'black',
+            backgroundColor: '#6F7F8F',
             padding: 10,
             marginTop: 10,
             width: 100,
@@ -88,21 +89,16 @@ const Login = ({navigation}) => {
           }}
           onPress={handleLogin}
         >
-          <Text style={{color: 'white', fontSize: 16}}>Login</Text>
+          <Text style={{color: 'black', fontSize: 13}}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: 'black',
-            padding: 10,
 
-            marginTop: 10,
-            width: 300,
-            alignContent: 'center',
-            alignItems: 'center',
-          }}
+        <TouchableOpacity
+         style={styles.registerLink} 
           onPress={() => navigation.navigate('Register')}
         >
-          <Text style={{color: 'white', fontSize: 16}}>Don't have an account? Register</Text>
+          <Text style={{color: 'black', fontSize: 13, fontWeight: 'bold', marginTop: 10}}>
+            Don't have an account? Register
+          </Text>
         </TouchableOpacity>
               </View>
       </SafeAreaView>

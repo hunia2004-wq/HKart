@@ -8,19 +8,18 @@ import { View, Image, Alert, FlatList, StyleSheet, Text,} from 'react-native'
 const styles = StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F5F5F5',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#C7CED6'
       },
-      title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-      },
+      
       productContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 15,
+        marginBottom: 10,
+        marginTop: 20,
+        
       },
       productImage: {
         width: 50,
@@ -28,11 +27,15 @@ const styles = StyleSheet.create({
         marginRight: 10,
       },
       productName: {
-        fontSize: 18,
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#2E2E2E',
       },
       productPrice: {
-        fontSize: 16,
-        color: 'gray',
+        fontSize: 15,
+        color: '#6F7F8F',
+        marginLeft: 10,
+        fontWeight: 'bold',
       },
     }); 
 
@@ -40,8 +43,6 @@ const Products = ({navigation}) => {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-
-  
 
 const fetchProducts = async () => {
   try {
@@ -76,9 +77,8 @@ const fetchProducts = async () => {
     
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Products</Text>
         {loading ? (
-          <Text>Loading...</Text>
+          <Text>Loading....</Text>
         ) : (
           <FlatList
             data={products}

@@ -12,7 +12,7 @@ const Home = ({navigation}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text>Welcome to HKart</Text>
+   
       <TouchableOpacity
         style={styles.button}
         onPress={() => supabase.auth.signOut()}
@@ -62,18 +62,25 @@ const Home = ({navigation}) => {
         <Text style={styles.buttonText}>Barcode Scanner</Text>
        
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Account')}
+      >
+        <Text style={styles.buttonText}>Account</Text>
+       
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'black',
+    backgroundColor: '#6F7F8F',
     padding: 10,
     marginTop: 10,
   },
   buttonText: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
   },
 });
