@@ -6,7 +6,22 @@ import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
-
+const styles =
+StyleSheet.create({
+  input: {
+    width: 300,
+    margin: 12,
+    borderWidth: 3,
+    borderColor: '#6F7F8F',
+    padding: 10,
+  },
+  container:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#C7CED6',
+  }
+})
 
 export default function Account() {
   const [loading, setLoading] = useState(true)
@@ -76,7 +91,7 @@ export default function Account() {
     return <Text>Loading...</Text>
   }
   return (
-    <View >
+    <View style={styles.container}>
       <View>
         <Avatar
           size={200}
@@ -100,6 +115,7 @@ export default function Account() {
           value={session.user.email ?? ''}
           editable={false}
           selectTextOnFocus={false}
+        style={styles.input}
           
           
         />
@@ -109,7 +125,7 @@ export default function Account() {
         <TextInput
           value={username || ''}
           onChangeText={(text) => setUsername(text)}
-          
+        style={styles.input}  
           
         />
       </View>
@@ -118,6 +134,7 @@ export default function Account() {
         <TextInput
           value={website || ''}
           onChangeText={(text) => setWebsite(text)}
+          style={styles.input}
           
         />
       </View>
