@@ -64,6 +64,7 @@ const Products = ({navigation}) => {
   const [loading, setLoading] = React.useState(true);
   const [category, setCategory] = React.useState('all');
   const [categories, setCategories] = React.useState([]);
+
    
   
 
@@ -72,6 +73,7 @@ const Products = ({navigation}) => {
   
 
 const fetchProducts = async () => {
+  
   try {
     setLoading(true)
 
@@ -109,11 +111,14 @@ const fetchProducts = async () => {
         const uniqueCategories = [...new Set(data.map(item => item.category))]
         setCategories(uniqueCategories)
       }
+      
     }
 
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    console.log(products);
+    
   }, [category]);
 
 
@@ -121,6 +126,7 @@ const fetchProducts = async () => {
     
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        
         {loading ? (
           <Text>Loading....</Text>
         ) : (
@@ -167,16 +173,23 @@ const fetchProducts = async () => {
             data={products}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
+          
               <View style={styles.productContainer}>
                 <Image source={{ uri: item.image_url }} style={styles.productImage} />
                 <Text style={styles.productName}>{item.name}</Text>
                 <Text style={styles.productPrice}>{item.price} EGP</Text>
               </View>
+              
+              </TouchableOpacity>
+              
             )}
           />
+          
        
         </View>
-         )}
+        )}
+         
       </SafeAreaView>
     </SafeAreaProvider>
   );
