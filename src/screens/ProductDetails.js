@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Alert, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Image, StyleSheet } from 'react-native';
+import ShoppingCartStore from '../hooks/ShoppingCartStore';
 
 
 
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
 
 const ProductDetails = ({ navigation, route }) => {
 const { product } = route.params
+const { addItem } = ShoppingCartStore()
 
   return (
     <SafeAreaProvider>
@@ -35,8 +37,9 @@ const { product } = route.params
       <Text style={styles.productPrice}>{product.price} EGP</Text>
       <Text style={styles.productDescription}>{product.description}</Text>
       
-      <TouchableOpacity onPress={() => navigation.navigate('ShoppingCart', { product })}>
+      <TouchableOpacity onPress={() => { addItem(product); Alert.alert('Added to Cart', `${product.name} has been added to your cart.`) }}>
         <Text style={styles.buttonText}>Add to Cart</Text>
+        
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Wishlist', { product })}>
         <Text style={styles.buttonText}>Add to Wishlist</Text>  
