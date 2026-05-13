@@ -34,22 +34,16 @@ const StoreLocator = ({navigation}) => {
     getCurrentLocation();
   }, []);
 
-  let text = 'Waiting...';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-
-
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} 
-      longutyde={location?.coords?.longitude}
-      latitude={location?.coords?.latitude}
-      latitudeDelta={0.0922}
-      longitudeDelta={0.0421}
+      initialRegion={{
+        longitude: location?.coords?.longitude,
+        latitude: location?.coords?.latitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      }}
       />
     </View>
   );
