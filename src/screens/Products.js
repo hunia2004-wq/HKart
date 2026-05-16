@@ -2,7 +2,7 @@ import { supabase } from '../lib/supabase'
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { View, Image, Alert, FlatList, StyleSheet, Text,ScrollView, TouchableOpacity} from 'react-native'
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy'
 import * as Network from 'expo-network'
 
 const styles = StyleSheet.create({
