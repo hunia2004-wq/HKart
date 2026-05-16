@@ -4,6 +4,7 @@ import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { View, Image, Alert, FlatList, StyleSheet, Text,ScrollView, TouchableOpacity} from 'react-native'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Network from 'expo-network'
+import { usePowerState } from 'expo-battery'
 
 const styles = StyleSheet.create({
       container: {
@@ -65,6 +66,7 @@ const Products = ({navigation}) => {
   const [category, setCategory] = React.useState('all');
   const [categories, setCategories] = React.useState([]);
   const [isOffline, setIsOffline] = useState(false)
+  const { lowPowerMode, batteryLevel, batteryState } = usePowerState();
   
    
   
@@ -77,6 +79,11 @@ const fetchProducts = async () => {
   
   try {
     setLoading(true)
+    if (batteryLevel > 0 && batteryLevel < 0.2)  {
+  Alert.alert('Low Battery', 'Sync paused to save battery')
+  setLoading(false)
+  return
+}
     const network = await Network.getNetworkStateAsync()
       if (!network.isConnected) {
         setIsOffline(true)

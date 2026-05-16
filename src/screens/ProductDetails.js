@@ -3,7 +3,7 @@ import {Alert, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Image, StyleSheet } from 'react-native';
 import ShoppingCartStore from '../hooks/ShoppingCartStore';
-
+import { supabase } from '../lib/supabase'
 
 
 const styles = StyleSheet.create({
@@ -23,6 +23,26 @@ const styles = StyleSheet.create({
 const ProductDetails = ({ navigation, route }) => {
 const { product } = route.params
 const { addItem } = ShoppingCartStore()
+const addToWishlist= async()=> {
+
+try{
+
+const { data: { user } } = await supabase.auth.getUser()
+    const { error} = await supabase
+      .from('wishlist')
+      .insert({ 
+      user_id: user.id,
+     product_id: product.id
+      })
+    if (error) throw error 
+ Alert.alert('Success', 'Added to wishlist!')
+   
+} catch (error){
+  Alert.alert ('Nothing in wishlist', error.message)
+}
+    
+
+}
 
   return (
     <SafeAreaProvider>
@@ -41,7 +61,7 @@ const { addItem } = ShoppingCartStore()
         <Text style={styles.buttonText}>Add to Cart</Text>
         
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Wishlist', { product })}>
+      <TouchableOpacity onPress={addToWishlist}>
         <Text style={styles.buttonText}>Add to Wishlist</Text>  
       </TouchableOpacity>
 
