@@ -11,8 +11,6 @@
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-     
-      
     },
     "ios": {
       "supportsTablet": true
@@ -31,8 +29,12 @@
       "expo-secure-store",
       "expo-font",
       "expo-notifications"
-    ]
-    
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "04737841-4d3e-4e6d-be9e-db6331cf4030"
+      }
+    },
+    "owner": "huniakhattab"
   }
-  
 }
