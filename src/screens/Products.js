@@ -2,8 +2,8 @@ import { supabase } from '../lib/supabase'
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { View, Image, Alert, FlatList, StyleSheet, Text,ScrollView, TouchableOpacity} from 'react-native'
-
-
+import * as FileSystem from 'expo-file-system';
+import * as Network from 'expo-network'
 
 const styles = StyleSheet.create({
       container: {
@@ -58,13 +58,14 @@ const styles = StyleSheet.create({
       },
      
     }); 
-
+const CACHE_FILE = FileSystem.documentDirectory + 'products_cache.json'
 const Products = ({navigation}) => {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [category, setCategory] = React.useState('all');
   const [categories, setCategories] = React.useState([]);
-
+  const [isOffline, setIsOffline] = useState(false)
+  
    
   
 
@@ -76,6 +77,18 @@ const fetchProducts = async () => {
   
   try {
     setLoading(true)
+    const network = await Network.getNetworkStateAsync()
+      if (!network.isConnected) {
+        setIsOffline(true)
+        const cache = await FileSystem.readAsStringAsync(CACHE_FILE)
+        if (cache) {
+          setProducts(JSON.parse(cache))
+        } else {
+          Alert.alert('No cached data available')
+        }
+        return
+      }
+    
 
     let query = supabase.from('products').select('*')
     if (category !== 'all') {
@@ -93,6 +106,8 @@ const fetchProducts = async () => {
       if (data) {
          
         setProducts(data)
+        await FileSystem.writeAsStringAsync(CACHE_FILE, JSON.stringify(data))
+setIsOffline(false)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -113,6 +128,8 @@ const fetchProducts = async () => {
       }
       
     }
+    
+
 
   useEffect(() => {
     fetchProducts();
@@ -126,6 +143,8 @@ const fetchProducts = async () => {
     
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        {isOffline && <Text style={{backgroundColor: 'red', color: 'white', padding: 10, width: '100%', textAlign: 'center'}}>You are offline - showing cached products</Text>}
+
         
         {loading ? (
           <Text>Loading....</Text>
