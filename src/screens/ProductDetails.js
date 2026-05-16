@@ -4,6 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Image, StyleSheet } from 'react-native';
 import ShoppingCartStore from '../hooks/ShoppingCartStore';
 import { supabase } from '../lib/supabase'
+import * as Haptics from 'expo-haptics'
 
 
 const styles = StyleSheet.create({
@@ -57,11 +58,11 @@ const { data: { user } } = await supabase.auth.getUser()
       <Text style={styles.productPrice}>{product.price} EGP</Text>
       <Text style={styles.productDescription}>{product.description}</Text>
       
-      <TouchableOpacity onPress={() => { addItem(product); Alert.alert('Added to Cart', `${product.name} has been added to your cart.`) }}>
-        <Text style={styles.buttonText}>Add to Cart</Text>
+      <TouchableOpacity onPress={() => { Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success); addItem(product); Alert.alert('Added to Cart', `${product.name} has been added to your cart.` ) }}>
+        <Text style={styles.buttonText} >Add to Cart</Text>
         
       </TouchableOpacity>
-      <TouchableOpacity onPress={addToWishlist}>
+      <TouchableOpacity onPress={()=>{ Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); addToWishlist()}}>
         <Text style={styles.buttonText}>Add to Wishlist</Text>  
       </TouchableOpacity>
 

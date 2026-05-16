@@ -16,6 +16,7 @@ import Welcome from '../screens/Welcome';
 import Wishlist from '../screens/Wishlist';
 import Account from '../screens/Account';
 import ProductImageUpload from '../screens/ProductImageUpload';
+import * as Linking from 'expo-linking'
 
 
 
@@ -26,11 +27,21 @@ const session = React.useContext(AuthContext)
 
 
 const isSignedIn = session !== null;
-
+const linking = {
+  prefixes: [Linking.createURL('/'), 'hkart://'],
+  config: {
+    screens: {
+      ProductDetails: 'product/:id',
+      Products: 'products',
+      Home: 'home',
+    }
+  }
+}
 return (
  
-  <NavigationContainer>
+  <NavigationContainer linking={linking}>
     <Stack.Navigator initialRouteName='Welcome'>
+      
       
      
       {isSignedIn ? (
@@ -46,6 +57,7 @@ return (
     <Stack.Screen name="Wishlist" component={Wishlist} />
     <Stack.Screen name="Account" component={Account} />
     <Stack.Screen name="ProductImageUpload" component={ProductImageUpload} />
+    
     
 
 

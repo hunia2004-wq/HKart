@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics'
 
 
 
@@ -47,6 +48,7 @@ export default function Checkout({navigation}) {
   })
       if (error) throw error
      Alert.alert('order placed successully')
+     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
     } catch (error) {
     Alert.alert('Error checkout', error.message);
     
