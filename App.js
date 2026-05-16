@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { useNetworkState } from 'expo-network';
+import {View, Text} from 'react-native'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -79,6 +81,7 @@ async function registerForPushNotificationsAsync() {
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(undefined);
+  const networkState = useNetworkState();
 
   useEffect(() => {
     registerForPushNotificationsAsync()
@@ -93,15 +96,25 @@ export default function App() {
       console.log(response);
     });
 
+console.log(`Current network type: ${networkState.type}`);
+
     return () => {
       notificationListener.remove();
       responseListener.remove();
+      
     };
   }, []);
 
 
+
   return (
+    
     <SafeAreaProvider>
+      {!networkState.isConnected && 
+  <View style={{ backgroundColor: 'red', padding: 10, paddingTop:50 }}>
+    <Text style={{ color: 'white', textAlign: 'center' }}>No Internet Connection</Text>
+  </View>
+}
       <AuthProvider>
         <Navigation />
       </AuthProvider>
