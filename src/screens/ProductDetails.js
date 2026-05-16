@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Alert, Text, TouchableOpacity } from 'react-native'
+import {Alert, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Image, StyleSheet } from 'react-native';
 import ShoppingCartStore from '../hooks/ShoppingCartStore';
