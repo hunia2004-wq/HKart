@@ -6,6 +6,8 @@ import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import i18n from '../../il8n';
 import { View, Alert, TextInput, Text, TouchableOpacity} from 'react-native'
+import {useColorScheme, Appearance } from 'react-native';
+
 
 
 const styles =
@@ -23,7 +25,20 @@ StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#C7CED6',
   },
-})
+  lightContainer: {
+    backgroundColor: '#d0d0c0',
+  },
+  darkContainer: {
+    backgroundColor: '#242c40',
+  },
+  lightThemeText: {
+    color: '#242c40',
+  },
+  darkThemeText: {
+    color: '#d0d0c0',
+  },
+});
+
 
 
 export default function Account() {
@@ -33,11 +48,24 @@ export default function Account() {
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
   const [language, setLanguage] = useState(i18n.locale)
+ const [nativeColorScheme, setNativeColorScheme] = useState('auto');
+ const colorScheme = useColorScheme();
+const themeContainerStyle = nativeColorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
+    useEffect(() => {
+    Appearance.setColorScheme(nativeColorScheme);
+}, [nativeColorScheme]);
+
 const toggleLanguage = () => {
   const newLang = language === 'en' ? 'fr' : 'en';
   i18n.locale = newLang;
   setLanguage(newLang);
 }
+const toggleTheme = () => {
+    const nextTheme = nativeColorScheme === 'dark' ? 'light' : 'dark';
+    setNativeColorScheme(nextTheme);
+};
+
+
  
 
  
@@ -103,7 +131,7 @@ const toggleLanguage = () => {
     return <Text>Loading...</Text>
   }
   return (
-    <View style={[styles.container]}>
+   <View style={[styles.container, themeContainerStyle]}>
       <View>
         <Avatar
           size={200}
@@ -169,6 +197,9 @@ const toggleLanguage = () => {
           
         </TouchableOpacity>
       </View>
+     <TouchableOpacity onPress={toggleTheme}>
+  <Text>Switch to {nativeColorScheme === 'dark' ? 'Light' : 'Dark'} Mode</Text>
+</TouchableOpacity>
     </View>
   )
   
