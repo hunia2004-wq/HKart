@@ -5,8 +5,8 @@ import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import i18n from '../../il8n';
-import { View, Alert, TextInput, Text, TouchableOpacity, useColorScheme, Switch} from 'react-native'
-import * as Appearance from 'expo-appearance'
+import { View, Alert, TextInput, Text, TouchableOpacity} from 'react-native'
+
 
 const styles =
 StyleSheet.create({
@@ -23,10 +23,6 @@ StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#C7CED6',
   },
-  darkContainer:{ backgroundColor: '#1a1a1a' },
-lightContainer: { backgroundColor: '#C7CED6' },
-darkText: { color: '#ffffff' },
-lightText: { color: '#000000' },
 })
 
 
@@ -43,12 +39,7 @@ const toggleLanguage = () => {
   setLanguage(newLang);
 }
  
-const colorScheme = useColorScheme(); // Returns 'light' or 'dark'
 
-  const themeContainerStyle =
-    colorScheme === 'dark' ? styles.darkContainer : styles.lightContainer;
-  const themeTextStyle =
-    colorScheme === 'dark' ? styles.darkText : styles.lightText;
  
 
 
@@ -112,7 +103,7 @@ const colorScheme = useColorScheme(); // Returns 'light' or 'dark'
     return <Text>Loading...</Text>
   }
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <View style={[styles.container]}>
       <View>
         <Avatar
           size={200}
