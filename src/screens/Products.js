@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
       
       productContainer: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'center',
         marginBottom: 10,
         marginTop: 20,
@@ -142,9 +143,21 @@ setIsOffline(false)
     fetchProducts();
     fetchCategories();
     console.log(products);
+    const changes = supabase
+  .channel('schema-db-changes')
+  .on(
+    'postgres_changes',
+    {
+      event: 'UPDATE', // Listen only to UPDATEs
+      schema: 'public',
+      table: 'products'
+    },
+  (payload) => setProducts(prev => prev.map(p => p.id === payload.new.id ? payload.new : p))
+  )
+  .subscribe()
     
+return () => supabase.removeChannel(changes)
   }, [category]);
-
 
   return (
     
@@ -198,14 +211,21 @@ setIsOffline(false)
           <FlatList
             data={products}
             keyExtractor={(item) => item.id.toString()}
+            
             renderItem={({ item }) => (
+              
               <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
           
               <View style={styles.productContainer}>
-                <Image source={{ uri: item.image_url }} style={styles.productImage} />
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>{item.price} EGP</Text>
-              </View>
+  <Image source={{ uri: item.image_url }} style={styles.productImage} />
+  <View style={{flex: 1}}>
+    <Text style={styles.productName}>{item.name}</Text>
+    <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 4}}>
+      <Text style={styles.productPrice}>{item.price} EGP</Text>
+      {item.stock_quantity <= 0 && <Text style={{color: 'red', fontWeight: 'bold'}}>Out of Stock</Text>}
+    </View>
+  </View>
+</View>
               
               </TouchableOpacity>
               

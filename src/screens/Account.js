@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { View, Alert, TextInput, Text, TouchableOpacity } from 'react-native'
 import Avatar from '../components/Avatar'
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
+import i18n from '../../il8n';
+import { View, Alert, TextInput, Text, TouchableOpacity, useColorScheme, Switch} from 'react-native'
+import * as Appearance from 'expo-appearance'
 
 const styles =
 StyleSheet.create({
@@ -20,8 +22,13 @@ StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#C7CED6',
-  }
+  },
+  darkContainer:{ backgroundColor: '#1a1a1a' },
+lightContainer: { backgroundColor: '#C7CED6' },
+darkText: { color: '#ffffff' },
+lightText: { color: '#000000' },
 })
+
 
 export default function Account() {
   const [loading, setLoading] = useState(true)
@@ -29,7 +36,21 @@ export default function Account() {
   const [username, setUsername] = useState('')
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [language, setLanguage] = useState(i18n.locale)
+const toggleLanguage = () => {
+  const newLang = language === 'en' ? 'fr' : 'en';
+  i18n.locale = newLang;
+  setLanguage(newLang);
+}
  
+const colorScheme = useColorScheme(); // Returns 'light' or 'dark'
+
+  const themeContainerStyle =
+    colorScheme === 'dark' ? styles.darkContainer : styles.lightContainer;
+  const themeTextStyle =
+    colorScheme === 'dark' ? styles.darkText : styles.lightText;
+ 
+
 
   useEffect(() => {
     if (session.user.id) getProfile()
@@ -91,7 +112,7 @@ export default function Account() {
     return <Text>Loading...</Text>
   }
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themeContainerStyle]}>
       <View>
         <Avatar
           size={200}
@@ -148,7 +169,9 @@ export default function Account() {
           <Text >{loading ? 'Loading ...' : 'Update'}</Text>
         </TouchableOpacity>
       </View>
-
+<TouchableOpacity onPress={toggleLanguage}>
+  <Text>{language === 'en' ? 'Switch to French' : 'Switch to English'}</Text>
+</TouchableOpacity>
       <View >
         <TouchableOpacity  onPress={() => supabase.auth.signOut()}>
           <Text >Sign Out</Text>
