@@ -1,7 +1,7 @@
 import React from 'react'
 import {Alert, Text, TouchableOpacity } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, View} from 'react-native';
 import ShoppingCartStore from '../hooks/ShoppingCartStore';
 import { supabase } from '../lib/supabase'
 import * as Haptics from 'expo-haptics'
@@ -11,14 +11,59 @@ import i18n from '../../il8n';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#C7CED6',
+    padding: 16,
   },
-  tinyLogo: {
-    width: 300,
+  tinyimage: {
+    width: '100%',
     height: 300,
+    resizeMode: 'contain',
   },
-  logo: {
-    width: 300,
-    height: 300,
+  nameAndPrice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 16,
+  },
+  productName: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'black',
+    fontFamily: 'georgia',
+  },
+  productPrice: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#3D5A6C',
+    fontFamily: 'georgia',
+  },
+  productDescription: {
+    fontSize: 12,
+    color: '#444',
+    fontFamily: 'helvetica',
+    textAlign: 'center',
+    marginTop: 8,
+    marginHorizontal: 16,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 12,
+  },
+  button: {
+    backgroundColor: '#6F7F8F',
+    padding: 12,
+    borderRadius: 8,
+    width: '47%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 14,
+    fontFamily: 'georgia',
   },
 });
 
@@ -51,15 +96,16 @@ const { data: { user } } = await supabase.auth.getUser()
       <SafeAreaView style={styles.container}>
         
       <Image
-        style={styles.tinyLogo}
+        style={styles.tinyimage}
         source={{ uri: product.image_url }} 
         />
-      
+      <View style={styles.nameAndPrice}>
       <Text style={styles.productName}>{product.name}</Text>
       <Text style={styles.productPrice}>{product.price} EGP</Text>
+      </View>
       <Text style={styles.productDescription}>{product.description}</Text>
       {product.stock_quantity <= 0 && <Text style={{color: 'red', fontWeight: 'bold'}}>{i18n.t('outOfStock')}</Text>}
-      
+      <View style={styles.buttonRow}>
      <TouchableOpacity 
   onPress={() => { 
     if (product.stock_quantity <= 0) return;
@@ -67,7 +113,7 @@ const { data: { user } } = await supabase.auth.getUser()
     addItem(product); 
     Alert.alert('Added to Cart', `${product.name} has been added to your cart.`) 
   }}
-  style={{opacity: product.stock_quantity <= 0 ? 0.4 : 1}}
+ style={[styles.button, {opacity: product.stock_quantity <= 0 ? 0.4 : 1}]}
 >
   <Text style={styles.buttonText}>{i18n.t('addToCart')}</Text>
 </TouchableOpacity>
@@ -77,10 +123,11 @@ const { data: { user } } = await supabase.auth.getUser()
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); 
     addToWishlist()
   }}
-  style={{opacity: product.stock_quantity <= 0 ? 0.4 : 1}}
+  style={[styles.button, {opacity: product.stock_quantity <= 0 ? 0.4 : 1}]}
 >
   <Text style={styles.buttonText}>{i18n.t('addToWishlist')}</Text>  
 </TouchableOpacity>
+</View>
 
       </SafeAreaView>
     </SafeAreaProvider>
