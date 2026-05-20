@@ -5,6 +5,8 @@ import { View, Image, Alert, FlatList, StyleSheet, Text,ScrollView, TouchableOpa
 import * as FileSystem from 'expo-file-system/legacy'
 import * as Network from 'expo-network'
 import { usePowerState } from 'expo-battery'
+import { useContext } from 'react'
+import { CurrencyContext } from '../../App'
 
 const styles = StyleSheet.create({
       container: {
@@ -68,8 +70,9 @@ const Products = ({navigation}) => {
   const [categories, setCategories] = React.useState([]);
   const [isOffline, setIsOffline] = useState(false)
   const { lowPowerMode, batteryLevel, batteryState } = usePowerState();
-  
-   
+  const { currency } = useContext(CurrencyContext)
+ const rates = { EGP: 1, USD: 0.02, EUR: 0.019, SAR: 0.075 }
+const convertPrice = (price) => (price * rates[currency]).toFixed(2)  
   
 
 
@@ -221,7 +224,7 @@ return () => supabase.removeChannel(changes)
   <View style={{flex: 1}}>
     <Text style={styles.productName}>{item.name}</Text>
     <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 4}}>
-      <Text style={styles.productPrice}>{item.price} EGP</Text>
+<Text style={styles.productPrice}>{convertPrice(item.price)} {currency}</Text>
       {item.stock_quantity <= 0 && <Text style={{color: 'red', fontWeight: 'bold'}}>Out of Stock</Text>}
     </View>
   </View>

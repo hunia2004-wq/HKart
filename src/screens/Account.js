@@ -6,8 +6,7 @@ import { StyleSheet } from 'react-native';
 import i18n from '../../il8n';
 import { View, Alert, TextInput, Text, TouchableOpacity } from 'react-native'
 import {useColorScheme, Appearance } from 'react-native';
-
-
+import { CurrencyContext } from '../../App';
 
 const styles = StyleSheet.create({
   input: {
@@ -16,6 +15,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#6F7F8F',
     padding: 10,
+    color: 'white',
+    fontFamily: 'georgia',
   },
   container: {
     flex: 1,
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#C7CED6',
   },
   lightContainer: {
-    backgroundColor: '#d0d0c0',
+    backgroundColor: '#C7CED6',
   },
   darkContainer: {
     backgroundColor: '#242c40',
@@ -35,6 +36,40 @@ const styles = StyleSheet.create({
   darkThemeText: {
     color: '#d0d0c0',
   },
+  label: {
+    color: 'white',
+    fontFamily: 'georgia',
+    fontSize: 14,
+    marginLeft: 12,
+  },
+  button: {
+    backgroundColor: '#6F7F8F',
+    padding: 10,
+    borderRadius: 6,
+    marginTop: 8,
+    width: 300,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 14,
+    fontFamily: 'georgia',
+  },
+  currencyRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 8,
+},
+currencyButton: {
+    backgroundColor: '#6F7F8F',
+    padding: 10,
+    borderRadius: 6,
+    alignItems: 'center',
+    flex: 1,
+},
+activeCurrency: {
+    backgroundColor: '#3D5A6C',
+},
 });
 
 export default function Account() {
@@ -44,6 +79,7 @@ export default function Account() {
   const [website, setWebsite] = useState('')
   const [language, setLanguage] = useState(i18n.locale)
   const [nativeColorScheme, setNativeColorScheme] = useState('auto');
+  const { currency, setCurrency } = useContext(CurrencyContext)
 
   const themeContainerStyle = nativeColorScheme === 'light' ? styles.lightContainer : styles.darkContainer;
 
@@ -61,6 +97,12 @@ export default function Account() {
     const nextTheme = nativeColorScheme === 'dark' ? 'light' : 'dark';
     setNativeColorScheme(nextTheme);
   };
+  const toggleCurrency = () => {
+    const currencies = ['EGP', 'USD', 'EUR', 'SAR']
+    const currentIndex = currencies.indexOf(currency)
+    const nextCurrency = currencies[(currentIndex + 1) % currencies.length]
+    setCurrency(nextCurrency)
+}
 
   useEffect(() => {
     if (session.user.id) getProfile()
@@ -109,7 +151,7 @@ export default function Account() {
   return (
     <View style={[styles.container, themeContainerStyle]}>
       <View>
-        <Text>Email</Text>
+        <Text style={styles.label}>Email</Text>
         <TextInput
           value={session.user.email ?? ''}
           editable={false}
@@ -118,7 +160,7 @@ export default function Account() {
         />
       </View>
       <View>
-        <Text>Username</Text>
+        <Text style={styles.label}>Username</Text>
         <TextInput
           value={username || ''}
           onChangeText={(text) => setUsername(text)}
@@ -126,7 +168,7 @@ export default function Account() {
         />
       </View>
       <View>
-        <Text>Website</Text>
+        <Text style={styles.label}>Website</Text>
         <TextInput
           value={website || ''}
           onChangeText={(text) => setWebsite(text)}
@@ -134,21 +176,33 @@ export default function Account() {
         />
       </View>
       <View>
-        <TouchableOpacity onPress={() => updateProfile({ username, website })} disabled={loading}>
-          <Text>{loading ? 'Loading ...' : 'Update'}</Text>
+        <TouchableOpacity style={styles.button} onPress={() => updateProfile({ username, website })} disabled={loading}>
+          <Text style={styles.buttonText}>{loading ? 'Loading ...' : 'Update'}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={toggleLanguage}>
-        <Text>{language === 'en' ? 'Switch to French' : 'Switch to English'}</Text>
+      <TouchableOpacity style={styles.button} onPress={toggleLanguage}>
+        <Text style={styles.buttonText}>{language === 'en' ? 'Switch to French' : 'Switch to English'}</Text>
       </TouchableOpacity>
+      <View style={styles.currencyRow}>
+    {['EGP', 'USD', 'EUR', 'SAR'].map((c) => (
+        <TouchableOpacity
+            key={c}
+            style={[styles.currencyButton, currency === c && styles.activeCurrency]}
+            onPress={() => setCurrency(c)}
+        >
+            <Text style={styles.buttonText}>{c}</Text>
+        </TouchableOpacity>
+    ))}
+</View>
       <View>
-        <TouchableOpacity onPress={() => supabase.auth.signOut()}>
-          <Text>Sign Out</Text>
-        </TouchableOpacity>
+        
       </View>
-      <TouchableOpacity onPress={toggleTheme}>
-        <Text>Switch to {nativeColorScheme === 'dark' ? 'Light' : 'Dark'} Mode</Text>
+      <TouchableOpacity style={styles.button} onPress={toggleTheme}>
+        <Text style={styles.buttonText}>Switch to {nativeColorScheme === 'dark' ? 'Light' : 'Dark'} Mode</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => supabase.auth.signOut()}>
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </TouchableOpacity>
     </View>
   )
 }

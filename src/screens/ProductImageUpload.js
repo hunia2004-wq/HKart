@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { Alert, Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native'
@@ -9,13 +8,29 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#C7CED6',
   },
   image: {
     width: 200,
     height: 200,
     marginBottom: 20,
+    borderRadius: 8,
+  },
+  button: {
+    backgroundColor: '#6F7F8F',
+    padding: 10,
+    borderRadius: 6,
+    marginTop: 12,
+    width: 250,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 14,
+    fontFamily: 'georgia',
   },
 })
+
 export default function ProductImageUpload() {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -33,7 +48,6 @@ export default function ProductImageUpload() {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      
     });
 
     console.log(result);
@@ -43,11 +57,9 @@ export default function ProductImageUpload() {
     }
   };
  
-    const ImageUpload = async () => {
-      setUploading(true)
+  const ImageUpload = async () => {
+    setUploading(true)
     try {
-      
-      
       const arraybuffer = await fetch(image).then((res) => res.arrayBuffer())
       const fileExt = image.split('.').pop()?.toLowerCase() ?? 'jpeg'
       const path = `${Date.now()}.${fileExt}`
@@ -72,17 +84,17 @@ export default function ProductImageUpload() {
   }
 
   return (
-   
     <View style={styles.container}>
       {image && <Image source={{ uri: image }} style={styles.image} />}
       
-       <TouchableOpacity onPress={pickImage}>
-      <Text>Pick an image from camera roll</Text>
+      <TouchableOpacity style={styles.button} onPress={pickImage}>
+        <Text style={styles.buttonText}>Pick an image from camera roll</Text>
+      </TouchableOpacity>
+      {image && (
+        <TouchableOpacity style={styles.button} onPress={ImageUpload}>
+          <Text style={styles.buttonText}>{uploading ? 'Uploading...' : 'Upload Image'}</Text>
         </TouchableOpacity>
-        {image && (<TouchableOpacity onPress={ImageUpload} >
-            <Text>Upload Image</Text>
-          </TouchableOpacity>
-        )}
+      )}
     </View>
   );
 }

@@ -3,11 +3,8 @@ import { TextInput, Alert, TouchableOpacity, Text, View, StyleSheet, Button} fro
 import { supabase } from '../lib/supabase';
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics'
-
-
-
 
 const html = `
 <html>
@@ -30,10 +27,7 @@ export default function Checkout({navigation}) {
   const [cardnumber, setcardnumber] = React.useState('')
   const [expirydate, setexpirydate] = React.useState('')
   const [cvv, setcvv] = React.useState('')
-  
-  
 
-  
   async function handleCheckout() {
      console.log('attempting checkout')
      try {
@@ -51,79 +45,105 @@ export default function Checkout({navigation}) {
      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
     } catch (error) {
     Alert.alert('Error checkout', error.message);
-    
     }
-    
-    
-
    }
 
-  
- 
-
-  
   const printToFile = async () => {
-    // On iOS/android prints the given html. On web prints the HTML from the current page.
      const { uri } = await Print.printToFileAsync({ html }); 
     console.log('File has been saved to:', uri);
     await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
   };
 
-
-
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Button title="Download Receipt" onPress={printToFile} />
-      </View>
-       <TextInput
-                style={styles.input}
-                onChangeText={setcardholdername}
-                value={cardholdername}
-                placeholder="Cardholder Name"
-              />
-              <TextInput
-                style={styles.input}
-                onChangeText={setcardnumber}
-                value={cardnumber}
-                placeholder="Card Number"
-                secureTextEntry
-              />
-              <TextInput
-                style={styles.input}
-                onChangeText={setexpirydate}
-                value={expirydate}
-                placeholder="Expiry Date"
-              />
-              <TextInput
-                style={styles.input}
-                onChangeText={setcvv}
-                value={cvv}
-                placeholder="CVV"
-                secureTextEntry
-              />
-              <TouchableOpacity onPress={handleCheckout}>
-                <Text>Place order</Text>
-              </TouchableOpacity>
-              
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.card}>
+          <TextInput
+            style={styles.input}
+            onChangeText={setcardholdername}
+            value={cardholdername}
+            placeholder="Cardholder Name"
+            placeholderTextColor="#9AA5AE"
+          />
+          <TextInput
+            style={styles.input}
+            onChangeText={setcardnumber}
+            value={cardnumber}
+            placeholder="Card Number"
+            placeholderTextColor="#9AA5AE"
+            secureTextEntry
+          />
+          <View style={styles.row}>
+            <TextInput
+              style={[styles.input, styles.halfInput]}
+              onChangeText={setexpirydate}
+              value={expirydate}
+              placeholder="Expiry Date"
+              placeholderTextColor="#9AA5AE"
+            />
+            <TextInput
+              style={[styles.input, styles.halfInput]}
+              onChangeText={setcvv}
+              value={cvv}
+              placeholder="CVV"
+              placeholderTextColor="#9AA5AE"
+              secureTextEntry
+            />
+          </View>
+        </View>
+        <View style={styles.row}>
+          <TouchableOpacity style={styles.actionButton} onPress={handleCheckout}>
+            <Text style={styles.buttonText}>Place order</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton} onPress={printToFile}>
+            <Text style={styles.buttonText}>Download Receipt</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    flexDirection: 'column',
-    padding: 8,
+    backgroundColor: '#C7CED6',
+    padding: 10,
   },
-  spacer: {
-    height: 8,
+  card: {
+    backgroundColor: '#E3E6E8',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 10,
+    marginHorizontal: 10,
   },
-  printer: {
-    textAlign: 'center',
+  input: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 10,
+    fontSize: 15,
+    color: '#2E2E2E',
   },
-
+  row: {
+    flexDirection: 'row',
+    gap: 10,
+    marginHorizontal: 10,
+    marginTop: 10,
+  },
+  halfInput: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  actionButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 20,
+    backgroundColor: '#6F7F8F',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
 });
-

@@ -6,7 +6,8 @@ import ShoppingCartStore from '../hooks/ShoppingCartStore';
 import { supabase } from '../lib/supabase'
 import * as Haptics from 'expo-haptics'
 import i18n from '../../il8n';
-
+import { useContext } from 'react'
+import { CurrencyContext } from '../../App'
 
 const styles = StyleSheet.create({
   container: {
@@ -70,6 +71,9 @@ const styles = StyleSheet.create({
 const ProductDetails = ({ navigation, route }) => {
 const { product } = route.params
 const { addItem } = ShoppingCartStore()
+const { currency } = useContext(CurrencyContext)
+const rates = { EGP: 1, USD: 0.02, EUR: 0.019, SAR: 0.075 }
+const convertPrice = (price) => (price * rates[currency]).toFixed(2)
 const addToWishlist= async()=> {
 
 try{
@@ -101,7 +105,7 @@ const { data: { user } } = await supabase.auth.getUser()
         />
       <View style={styles.nameAndPrice}>
       <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.productPrice}>{product.price} EGP</Text>
+     <Text style={styles.productPrice}>{convertPrice(product.price)} {currency}</Text>
       </View>
       <Text style={styles.productDescription}>{product.description}</Text>
       {product.stock_quantity <= 0 && <Text style={{color: 'red', fontWeight: 'bold'}}>{i18n.t('outOfStock')}</Text>}

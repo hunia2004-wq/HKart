@@ -40,7 +40,7 @@ const linking = {
 return (
  
   <NavigationContainer linking={linking}>
-    <Stack.Navigator initialRouteName='Welcome'>
+    <Stack.Navigator initialRouteName={isSignedIn ? 'Home' : 'Welcome'}>
       
       
      

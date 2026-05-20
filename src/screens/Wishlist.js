@@ -45,15 +45,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   button: {
-    backgroundColor: '#6F7F8F',
-    padding: 10,
-    borderRadius: 6,
-    alignItems: 'center',
+    backgroundColor: '#E57373',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    alignSelf: 'flex-start',
   },
   buttonText: {
-    color: 'black',
+    color: '#ffffff',
     fontSize: 13,
-    fontFamily: 'georgia',
+    fontWeight: 'bold',
   },
 });
 const Wishlist = ({navigation}) => {

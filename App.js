@@ -1,12 +1,15 @@
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "./src/context/AuthContext";
 import Navigation  from "./src/navigation";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { useNetworkState } from 'expo-network';
 import {View, Text} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const CurrencyContext = createContext({ currency: 'EGP', setCurrency: () => {} });
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -82,8 +85,13 @@ export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(undefined);
   const networkState = useNetworkState();
+  const [currency, setCurrency] = useState('EGP');
 
   useEffect(() => {
+    AsyncStorage.getItem('currency').then(saved => {
+      if (saved) setCurrency(saved);
+    });
+
     registerForPushNotificationsAsync()
       .then(token => setExpoPushToken(token ?? ''))
       .catch((error) => setExpoPushToken(`${error}`));
@@ -96,14 +104,17 @@ export default function App() {
       console.log(response);
     });
 
-console.log(`Current network type: ${networkState.type}`);
+    console.log(`Current network type: ${networkState.type}`);
 
     return () => {
       notificationListener.remove();
       responseListener.remove();
-      
     };
   }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem('currency', currency);
+  }, [currency]);
 
 
 
@@ -115,9 +126,11 @@ console.log(`Current network type: ${networkState.type}`);
     <Text style={{ color: 'white', textAlign: 'center' }}>No Internet Connection</Text>
   </View>
 }
-      <AuthProvider>
-        <Navigation />
-      </AuthProvider>
+      <CurrencyContext.Provider value={{ currency, setCurrency }}>
+        <AuthProvider>
+          <Navigation />
+        </AuthProvider>
+      </CurrencyContext.Provider>
     </SafeAreaProvider>
   );
 }
