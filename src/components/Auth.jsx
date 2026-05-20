@@ -3,7 +3,7 @@ import { Alert,StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react
 import { supabase } from '../lib/supabase'
 
 
-export default function Auth() {
+export default function Auth({}) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)

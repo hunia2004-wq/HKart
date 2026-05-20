@@ -45,7 +45,7 @@ const BarcodeScanner = ({navigation}) => {
 
 
   if (!permission) {
-    // Camera permissions are still loading.
+
     return <View />;
   }
 
