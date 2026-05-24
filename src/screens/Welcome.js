@@ -40,7 +40,11 @@ const Welcome = ({ navigation }) => {
   return (
  
     <SafeAreaView style={styles.container}>
-      <Image source={require('../assets/Logo.png')} style={styles.logo} />
+       <Image 
+  source={require('../assets/Logo.png')} 
+  style={styles.logo}
+  fadeDuration={0}
+/>
       <Text style={ {color: 'black', fontSize: 23} }>HKart your cart</Text>
     </SafeAreaView>
 
