@@ -60,11 +60,7 @@ const Login = ({navigation}) => {
      
         <SafeAreaView style={{ flex:1}} edges={['bottom']} >
            <View style={styles.container}>
-             <Image 
-  source={require('../assets/Logo.png')} 
-  style={styles.logo}
-  fadeDuration={0}
-/>
+              <Image source={require('../assets/Logo.png')} style={styles.logo} />
               <Text style={styles.text}>HKart your cart</Text>
         
    
