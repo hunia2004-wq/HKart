@@ -22,7 +22,7 @@ const html = `
 </html>
 `;
 
-export default function Checkout({navigation}) {
+export default function Checkout({navigation, route}) {
   const [cardholdername, setcardholdername] = React.useState('')
   const [cardnumber, setcardnumber] = React.useState('')
   const [expirydate, setexpirydate] = React.useState('')
@@ -36,7 +36,7 @@ export default function Checkout({navigation}) {
   .from('orders')
   .insert({ 
   user_id: user.id,
-  Total_price: 0,
+  Total_price: route.params.total,
   status: 'pending',
   payment_method: 'card'
   })
