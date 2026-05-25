@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
-import { ShoppingCartStore  } from '../hooks/ShoppingCartStore';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { ShoppingCartStore } from '../hooks/ShoppingCartStore';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
@@ -37,6 +37,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#E57373',
   },
+  quantityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  quantityButton: {
+    backgroundColor: '#6F7F8F',
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quantityText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2E2E2E',
+    minWidth: 20,
+    textAlign: 'center',
+  },
   actionRow: {
     flexDirection: 'row',
     marginHorizontal: 10,
@@ -64,17 +84,23 @@ const styles = StyleSheet.create({
 })
 
 export default function ShoppingCart({navigation}) {
-  const { items, removeItem, getTotalPrice, clearCart } = ShoppingCartStore();
+  const { items, addItem, removeItem, getTotalPrice, clearCart } = ShoppingCartStore();
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         {items.map((item) => (
           <View key={item.id} style={styles.cartItem}>
-            <Text style={styles.itemName}>{item.name} x {item.quantity}</Text>
-            <TouchableOpacity style={styles.removeButton} onPress={() => removeItem(item.id)}>
-              <Text style={styles.buttonText}>Remove</Text>
-            </TouchableOpacity>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <View style={styles.quantityRow}>
+              <TouchableOpacity style={styles.quantityButton} onPress={() => removeItem(item.id)}>
+                <Text style={styles.buttonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>{item.quantity}</Text>
+              <TouchableOpacity style={styles.quantityButton} onPress={() => addItem(item)}>
+                <Text style={styles.buttonText}>+</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ))}
         <View style={styles.actionRow}>
